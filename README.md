@@ -189,7 +189,7 @@ All settings come from `.env` (see `.env.example`). Nothing is hardcoded, and em
 
 This project processes attacker IP addresses and follows Turkish data-protection law (KVKK, Law No. 6698) by design:
 
-- **Masking rule.** Every IPv4 address shown or stored downstream keeps only its first two octets: `185.67.33.193` becomes `185.67.***.***`. Stage 07 applies this rule to the dataset (`src_ip` and `src_ip_raw`) and to all generated reports.
+- **Masking rule.** Every IPv4 address shown or stored downstream keeps only its first two octets: `203.0.113.45` becomes `203.0.***.***`. Stage 07 applies this rule to the dataset (`src_ip`, `src_ip_raw`, `dest_ip`, and IPs inside `payload`, `url` and `downloads`) and to all generated reports.
 - **The dashboard shows only masked IPs.** It reads the masked `FINAL` dataset. Where it needs unmasked data internally (to look up the row behind a selected masked IP), only the masked form is ever displayed or written to the database. LLM output is masked again before display or storage, in case the model echoes an address.
 - **Real data is never committed.** The unmasked intermediate files (01–04 parquet, `10_ip_risk_scores.parquet`), the SQLite database, generated reports and `.env` are excluded by `.gitignore` and `.dockerignore`. The repository and the Docker image contain code only.
 - **External APIs.** Reputation lookups (AbuseIPDB) and the AI reports (Groq) necessarily receive the real IP of the address being analyzed. No other personal data is sent.

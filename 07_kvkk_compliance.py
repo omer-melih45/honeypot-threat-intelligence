@@ -8,7 +8,7 @@ import os
 
 def mask_ip_address(ip_string):
     # Hides the last two parts of an IP address.
-    # Example: 185.67.33.193 -> 185.67.***.***
+    # Example: 203.0.113.45 -> 203.0.***.***
     if pd.isna(ip_string):
         return ip_string
     
@@ -42,6 +42,17 @@ def enforce_dataset_compliance(input_filepath, output_filepath):
         has_raw = df['src_ip_raw'].notna()
         df.loc[has_raw, 'src_ip_raw'] = df.loc[has_raw, 'src_ip_raw'].astype(str).apply(anonymize_report_content)
         print("Raw source IP column successfully anonymized.")
+
+    # Free-text columns can contain IPs too (e.g. a wget URL in a payload)
+    for col in ['payload', 'url', 'downloads']:
+        if col in df.columns:
+            has_value = df[col].notna()
+            df.loc[has_value, col] = df.loc[has_value, col].astype(str).apply(anonymize_report_content)
+            print(f"{col} column successfully anonymized.")
+
+    if 'dest_ip' in df.columns:
+        df['dest_ip'] = df['dest_ip'].apply(mask_ip_address)
+        print("Destination IP column successfully anonymized.")
 
     df.to_parquet(output_filepath, index=False)
     print(f"Compliant dataset saved to: {output_filepath}")
