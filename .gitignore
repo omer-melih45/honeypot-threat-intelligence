@@ -1,0 +1,36 @@
+# ------------------------------------------------------------------
+# KVKK / privacy: the pipeline's intermediate data (01-04 parquet,
+# 10_ip_risk_scores.parquet) contains REAL, unmasked attacker IPs.
+# No data, database, report or secret may ever be committed.
+# ------------------------------------------------------------------
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Data (raw + intermediate + masked) and databases
+*.parquet
+*.db
+
+# Generated outputs
+ai_reports/
+report_visuals/
+# Real data moved aside by `generate_demo_data.py --force`
+real_data_backup/
+
+# Logs (may contain host / network addresses)
+*.log
+streamlit_log.txt
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# Local editor / assistant settings
+.claude/
+.vscode/
+.idea/

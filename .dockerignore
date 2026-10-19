@@ -1,0 +1,19 @@
+# Keep the build context code-only (and free of real-IP data and secrets)
+.git
+.gitignore
+.env
+.streamlit/secrets.toml
+*.parquet
+*.db
+ai_reports/
+report_visuals/
+real_data_backup/
+__pycache__/
+*.pyc
+*.log
+streamlit_log.txt
+.venv/
+venv/
+.claude/
+.vscode/
+.idea/

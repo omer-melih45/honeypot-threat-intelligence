@@ -1,0 +1,42 @@
+# Data processing
+pandas==2.3.3
+numpy==2.2.6
+pyarrow==24.0.0
+
+# Machine learning & EDA plots
+scikit-learn==1.7.2
+matplotlib==3.10.9
+seaborn==0.13.2
+
+# Dashboard
+streamlit==1.59.0
+plotly==6.9.0
+pycountry==26.2.16
+geoip2fast==1.2.2
+
+# Streamlit's ASGI server stack, pinned explicitly: streamlit only declares lower
+# bounds (starlette>=0.40, uvicorn>=0.30, ...), so builds otherwise pick up the
+# newest release. starlette 1.8.0 breaks Streamlit 1.59's GZip middleware wrapper
+# (500 + "Expected ASGI message 'http.response.start'" on /favicon.png); 1.7.0 is
+# the newest verified-good version.
+starlette==1.7.0
+uvicorn==0.54.0
+httptools==0.9.0
+h11==0.16.0
+anyio==4.15.1
+websockets==16.1.1
+
+# LLM agents
+langchain-core==1.4.8
+langchain-groq==1.1.3
+langgraph==1.2.8
+
+# PDF export & images
+fpdf2==2.8.9
+pillow==12.2.0
+
+# Utilities
+requests==2.33.1
+python-dotenv==1.2.2
+# IANA time-zone data for zoneinfo; slim container images may not ship it
+tzdata==2026.2

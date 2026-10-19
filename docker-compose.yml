@@ -1,0 +1,25 @@
+services:
+  dashboard:
+    build: .
+    image: honeypot-threat-intel:latest
+    ports:
+      - "8501:8501"
+    env_file:
+      # Optional, so the demo runs without creating .env first (Compose >= 2.24)
+      - path: .env
+        required: false
+    volumes:
+      # The repo is code-only: data files (parquet, threat_intel.db, reports)
+      # live on the host and are mounted in, never baked into the image.
+      # Pipeline stages run in this same container write their outputs back here.
+      - .:/app
+    extra_hosts:
+      # Lets ES_HOST=http://host.docker.internal:9200 reach an Elasticsearch
+      # running on the host (needed on Linux; built in on Docker Desktop).
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+# Demo data (no Elasticsearch / API keys needed):
+#   docker compose run --rm dashboard python generate_demo_data.py
+# Pipeline stages use the same image, e.g.:
+#   docker compose run --rm dashboard python 02_preprocessing_and_eda.py
