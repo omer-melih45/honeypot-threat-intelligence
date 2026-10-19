@@ -206,20 +206,6 @@ Honeypots receive hostile input, and some events carry garbage in the source-IP 
 
 ---
 
-## Screenshots
-
-> _Placeholders. Add images under `docs/screenshots/`._
-
-| Overview | Risk scores & AI drill-down |
-|---|---|
-| ![Overview](docs/screenshots/overview.png) | ![Risk scores](docs/screenshots/risk-scores.png) |
-
-| Geographic map | Executive report |
-|---|---|
-| ![Map](docs/screenshots/geo-map.png) | ![Executive report](docs/screenshots/executive-report.png) |
-
----
-
 ## Project structure
 
 ```
@@ -240,4 +226,7 @@ Honeypots receive hostile input, and some events carry garbage in the source-IP 
 
 ## Attribution
 
-Built upon [ORIGINAL_REPO_NAME](ORIGINAL_REPO_URL) by ORIGINAL_AUTHOR, extended with the author's permission.
+The backend data pipeline was originally developed by Efe Emir Yüce in [Agentic-AI-in-Threat-Intelligence-Autonomous-Multi-Vector-Honeypot-Analysis](https://github.com/EfeEmirYuce/Agentic-AI-in-Threat-Intelligence-Autonomous-Multi-Vector-Honeypot-Analysis) at the
+MSKÜ DTCS Lab and is reused here with their permission. This repository adds the interactive
+Streamlit dashboard, a no-setup demo mode, Docker packaging with reproducible builds, and
+extends the KVKK masking.
