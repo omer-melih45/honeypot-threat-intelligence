@@ -18,7 +18,6 @@ from status_check import evaluate_system_status
 VARSAYILAN_SAAT_DILIMI = ZoneInfo("Europe/Istanbul")
 
 # ---------- Sayfa ayarları ----------
-# Logo yolu çalışma dizinine değil dashboard.py'nin konumuna göre çözülür.
 LOGO_YOLU = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "logo.png")
 
 
@@ -41,7 +40,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ---------- Renk paleti (dark) ----------
+#  Renk paleti (dark)
 SURFACE = "#1a1a19"
 INK_PRIMARY = "#ffffff"
 INK_SECONDARY = "#c3c2b7"
@@ -71,7 +70,7 @@ SISTEM_DURUM_ETIKETLERI = {
     "Unknown": "Durum Bilinmiyor",
 }
 
-# ---------- Görsel ince ayarlar ----------
+# Görsel ince ayarlar 
 st.markdown(
     """
     <style>
@@ -130,7 +129,7 @@ st.markdown(
 )
 
 
-# ---------- Maskeli IP önekinden ülke tespiti (KVKK: sadece görünen iki oktet kullanılır) ----------
+#  Maskeli IP önekinden ülke tespiti
 def _ulkeleri_coz(maskeli_ipler):
     geo = GeoIP2Fast(verbose=False)
     esleme = {}
@@ -149,7 +148,7 @@ def _ulkeleri_coz(maskeli_ipler):
     return esleme
 
 
-# ---------- Veriyi oku (bir kez okuyup bellekte tut - performans için) ----------
+# Veriyi oku 
 @st.cache_data(show_spinner=False)
 def veri_yukle():
     df = pd.read_parquet("FINAL_tpot_30days_kvkk_compliant.parquet")
@@ -161,11 +160,11 @@ def veri_yukle():
     return df
 
 
-# ---------- 10_risk_scoring.py çıktısını oku (gerçek IP -> maskeli IP) ----------
+#10_risk_scoring.py çıktısını oku (gerçek IP -> maskeli IP) 
 # 10_risk_scoring.py maskesiz src_ip ile çalışır; panel ise KVKK uyumlu maskeli
 # veriyi gösterir. Aynı maskeleme kuralını (07_kvkk_compliance.py) burada da
 # uygulayıp maskeli /16 bloğuna indiriyoruz. Birden fazla gerçek IP aynı bloğa
-# düşebileceğinden, o blok için en kötü senaryoyu (en yüksek riski) gösteriyoruz.
+# düşebileceğinden, o blok için en kötü senaryoyu (en yüksek riski) gösterir.
 MASKELI_IP_GECERSIZ = "***.***.***.***"  # src_ip 4 oktete ayrışmadığında (boş/bozuk veri)
 
 
@@ -390,7 +389,7 @@ def ip_raporu_getir(maskeli_ip, gercek_ip, skor_satiri):
     return maskeli_rapor, None
 
 
-# ---------- Aylık yönetici (CISO) raporu ----------
+#  Aylık yönetici (CISO) raporu 
 # Kalıcı kayıt 08_export_to_db.py'nin ai_intelligence_reports tablosudur (ekleme
 # tabanlı; en güncel rapor = en son eklenen satır). 06'nın ürettiği ham rapor
 # maskeli DEĞİLDİR - ekrana veya DB'ye gitmeden önce _metni_maskele'den geçer.
@@ -483,7 +482,7 @@ def yonetici_raporu_uret():
     return _metni_maskele(ham_rapor), None, bitis_nedeni == "length"  # ham_rapor bir daha asla kullanılmaz
 
 
-# ---------- Yönetici raporunun PDF çıktısı ----------
+#  Yönetici raporunun PDF çıktısı 
 # Rapor markdown olarak geliyor (başlıklar, tablolar, kalın yazı); PDF'te bu
 # işaretleri temizleyip başlık/paragraf/madde yapısını koruyoruz. Türkçe
 # karakterler için matplotlib ile birlikte gelen DejaVu Sans fontu kullanılıyor
@@ -512,9 +511,7 @@ def yonetici_raporu_pdf_olustur(rapor, tarih, kesik_mi):
 
     font_klasoru = os.path.join(matplotlib.get_data_path(), "fonts", "ttf")
 
-    # Sıkı ama okunaklı düzen: gövde 9.5pt, satır yüksekliği ~1.3x (4.4mm).
-    # Kenar boşlukları fpdf2 varsayılanı olan 1cm'de bırakıldı; alt boşluk
-    # 1.5cm'den 1.2cm'ye indirildi.
+
     GOVDE_PUNTO, GOVDE_SATIR = 9.5, 4.4
     TABLO_PUNTO, TABLO_SATIR = 8.5, 4.0
     MADDE_GIRINTI = 3
@@ -603,7 +600,7 @@ def yonetici_raporu_pdf_olustur(rapor, tarih, kesik_mi):
     return bytes(pdf.output())
 
 
-# ---------- Yükleme ekranı ----------
+#  Yükleme ekranı 
 @st.cache_resource
 def _ilk_yukleme_durumu():
     # Veriler bir kez yüklendiyse yükleme ekranı tekrar gösterilmez.
@@ -690,7 +687,7 @@ else:
     finally:
         yukleme_ekrani.empty()
 
-# ---------- Canlı saat widget'ı ----------
+# Canlı saat widget'ı 
 # st.context.timezone, tarayıcının Intl API'sinden gelen IANA saat dilimini
 # sunucuya bildirir; ziyaretçi İstanbul dışında biriyse doğru yerel saati
 # göstermek için bunu kullanıyoruz, tespit edilemezse İstanbul'a düşüyoruz.
@@ -716,10 +713,9 @@ def canli_saat():
     )
 
 
-# ---------- Canlı sistem durumu widget'ı ----------
+# Canlı sistem durumu widget'ı -
 # status_check.py Docker konteyner sayısını (subprocess + docker CLI) ve
 # Elasticsearch'teki en son olayın ne kadar önce geldiğini kontrol eder.
-# Docker/ES'e her saniye istek atmamak için saat widget'ından daha seyrek yeniliyoruz.
 # status_check.py kendi içinde Docker/ES hatalarını zaten yutuyor, ama panel
 # hiçbir durumda çökmemeli: beklenmeyen bir durum/anahtar gelirse de
 # "Durum Bilinmiyor" göster, hata fırlatma.
@@ -777,7 +773,7 @@ def _durum_rozetini_ciz():
     with durum_kolonu:
         canli_sistem_durumu()
 
-# ---------- Kenar çubuğu filtreleri ----------
+#  Kenar çubuğu filtreleri
 st.sidebar.header("Filtreler")
 
 sensorler = sorted(df["type"].dropna().unique())
@@ -810,7 +806,7 @@ if df_filtreli.empty:
     st.stop()
 
 
-# ---------- Ortak grafik stili ----------
+#  Ortak grafik stili 
 def stilendir(fig, height=420):
     fig.update_layout(
         paper_bgcolor=SURFACE,
@@ -826,7 +822,7 @@ def stilendir(fig, height=420):
     return fig
 
 
-# ---------- Özet metrikler ----------
+#Özet metrikler 
 kolon1, kolon2, kolon3, kolon4 = st.columns(4)
 kolon1.metric("Toplam Saldırı", f"{len(df_filtreli):,}")
 kolon2.metric("Benzersiz Saldırgan IP", f"{df_filtreli['src_ip'].nunique():,}")
@@ -835,7 +831,7 @@ kolon4.metric("Aktif Sensör Sayısı", df_filtreli["type"].nunique())
 
 st.write("")
 
-# ---------- Bölüm gezinmesi ----------
+#  Bölüm gezinmesi 
 # st.tabs seçili sekmeyi yeniden çalıştırmalar arasında korumuyor (sekme içindeki
 # bir düğme ilk sekmeye geri atıyordu) ve tüm sekme panellerini gizli olarak
 # DOM'a çizdiği için etiket ile içerik zaman zaman uyuşmuyordu. Bunun yerine
@@ -957,7 +953,7 @@ if aktif_bolum == "Risk Skorları":
         else:
             risk_filtreli["Risk_Seviyesi"] = risk_filtreli["Risk_Score"].apply(risk_seviyesi)
 
-            # ---------- Risk sekmesi içi filtre ----------
+            #  Risk sekmesi içi filtre 
             min_risk_skoru = st.slider(
                 "Minimum Risk Skoru", min_value=0, max_value=100, key="risk_min_skor"
             )
@@ -966,7 +962,7 @@ if aktif_bolum == "Risk Skorları":
             if risk_filtreli.empty:
                 st.info("Seçili filtre kriterlerine uyan IP bulunamadı.")
             else:
-                # ---------- Rapor için IP seçimi: yazmak yerine görüp tıklama ----------
+                #  Rapor için IP seçimi: yazmak yerine görüp tıklama 
                 # "***.***.***.***" = kaynak IP alanı ayrıştırılamayan bozuk kayıtların
                 # düştüğü ortak kova (ör. boş değer) - gerçek bir IP temsil etmediği
                 # için rapor seçiminde göstermiyoruz.
