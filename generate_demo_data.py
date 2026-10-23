@@ -282,9 +282,7 @@ def generate_events(rng):
     return df
 
 
-# --------------------------------------------------------------------------
 # Risk scores (shape of 10_ip_risk_scores.parquet)
-# --------------------------------------------------------------------------
 def generate_risk_scores(events, rng):
     abuse_ranges = {"203.0.113.": (55, 100), "198.51.100.": (15, 75), "192.0.2.": (0, 40)}
     fixed = {
