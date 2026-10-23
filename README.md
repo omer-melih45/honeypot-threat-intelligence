@@ -65,7 +65,7 @@ flowchart LR
 | Area | Tools |
 |---|---|
 | Data source | T-Pot, Elasticsearch |
-| Data processing | Python, pandas, PyArrow |
+| Data processing | Python, pandas, NumPy, PyArrow |
 | Machine learning | scikit-learn (K-Means, StandardScaler) |
 | LLM / agents | Groq (`openai/gpt-oss-20b`), LangChain, LangGraph |
 | Threat intelligence | AbuseIPDB, VirusTotal |
